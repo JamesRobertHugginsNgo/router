@@ -3,7 +3,7 @@ function router(routes = []) {
 		route() {
 			for (let index = 0, length = routes.length; index < length; index++) {
 				const { regex = /.*/, callback } = routes[index];
-				const [hash, query] = window.location.hash ? window.location.hash.substring(1).split('?') : [''];
+				const [hash, query] = window.location.hash ? decodeURI(window.location.hash).substring(1).split('?') : [''];
 				const result = regex.exec(hash);
 				if (result) {
 					callback.call(this, ...result, query);
