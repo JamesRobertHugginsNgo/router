@@ -30,7 +30,7 @@ function router() {
             regex = _routes$index$regex === void 0 ? /.*/ : _routes$index$regex,
             callback = _routes$index.callback;
 
-        var _ref = window.location.hash ? window.location.hash.substring(1).split('?') : [''],
+        var _ref = window.location.hash ? decodeURI(window.location.hash).substring(1).split('?') : [''],
             _ref2 = _slicedToArray(_ref, 2),
             hash = _ref2[0],
             query = _ref2[1];
