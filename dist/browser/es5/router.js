@@ -67,12 +67,12 @@ function router() {
 
       return this;
     },
-    push: function push(path) {
+    pushRoute: function pushRoute(path) {
       window.history.pushState({}, path, "#".concat(path));
       this.route();
       return this;
     },
-    replace: function replace(path) {
+    replaceRoute: function replaceRoute(path) {
       window.history.replaceState({}, path, "#".concat(path));
       this.route();
       return this;
