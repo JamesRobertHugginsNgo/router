@@ -26,8 +26,8 @@ const r = router([
 	}
 ]);
 
-document.getElementById('page-1').addEventListener('click', () => void r.push('page-1'));
-document.getElementById('page-2').addEventListener('click', () => void r.push('page-2'));
-document.getElementById('page-3').addEventListener('click', () => void r.push('page-3'));
+document.getElementById('page-1').addEventListener('click', () => void r.pushRoute('page-1'));
+document.getElementById('page-2').addEventListener('click', () => void r.pushRoute('page-2'));
+document.getElementById('page-3').addEventListener('click', () => void r.pushRoute('page-3'));
 
 r.start();

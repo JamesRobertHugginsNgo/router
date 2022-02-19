@@ -27,12 +27,12 @@ function router(routes = []) {
 			}
 			return this;
 		},
-		push(path) {
+		pushRoute(path) {
 			window.history.pushState({}, path, `#${path}`);
 			this.route();
 			return this;
 		},
-		replace(path) {
+		replaceRoute(path) {
 			window.history.replaceState({}, path, `#${path}`);
 			this.route();
 			return this;
