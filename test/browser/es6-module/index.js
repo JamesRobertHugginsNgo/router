@@ -1,4 +1,4 @@
-import router from '../../../dist/browser/es6-module/router.min.js';
+import router from '../../../dist/browser/es6-module/router.debug.js';
 
 const r = router([
 	{
