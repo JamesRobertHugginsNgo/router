@@ -1,4 +1,4 @@
-function router(routes = []) {
+function router(routes) {
 	return {
 		route() {
 			for (let index = 0, length = routes.length; index < length; index++) {
@@ -10,32 +10,30 @@ function router(routes = []) {
 					break;
 				}
 			}
+
 			return this;
 		},
 		start() {
-			if (!this.listender) {
-				this.listender = () => void this.route();
-				window.addEventListener('popstate', this.listender);
-				this.route();
-			}
-			return this;
+			this.listender = () => void this.route();
+			window.addEventListener('popstate', this.listender);
+
+			return this.route();
 		},
 		end() {
-			if (this.listender) {
-				window.removeEventListener('popstate', this.listender);
-				this.listender = null;
-			}
+			window.removeEventListener('popstate', this.listender);
+			delete this.listender;
+
 			return this;
 		},
 		pushRoute(path) {
 			window.history.pushState({}, path, `#${path}`);
-			this.route();
-			return this;
+
+			return this.route();
 		},
 		replaceRoute(path) {
 			window.history.replaceState({}, path, `#${path}`);
-			this.route();
-			return this;
+
+			return this.route();
 		}
 	};
 }
