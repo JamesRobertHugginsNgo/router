@@ -57,11 +57,6 @@ function router(routes) {
 			window.history.replaceState({}, path, `#${path}`);
 
 			return this.route();
-		},
-		routeBack() {
-			window.history.back();
-
-			return this;
 		}
 	};
 }

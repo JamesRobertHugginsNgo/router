@@ -90,10 +90,6 @@ function router(routes) {
 
       window.history.replaceState({}, path, "#".concat(path));
       return this.route();
-    },
-    routeBack: function routeBack() {
-      window.history.back();
-      return this;
     }
   };
 }

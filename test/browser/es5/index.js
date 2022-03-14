@@ -30,6 +30,6 @@ document.getElementById('page-1').addEventListener('click', function () { r.push
 document.getElementById('page-2').addEventListener('click', function () { r.pushRoute('page-2'); });
 document.getElementById('page-3').addEventListener('click', function () { r.pushRoute('page-3'); });
 
-document.getElementById('back').addEventListener('click', () => void r.routeBack());
+document.getElementById('back').addEventListener('click', () => void window.history.back());
 
 r.start();
