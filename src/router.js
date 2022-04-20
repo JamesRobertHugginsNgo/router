@@ -71,9 +71,9 @@ function router(routes) {
 	};
 }
 
-/* @if TARGET="BROWSER_ES6_MODULE" **
+/* @if TARGET="BROWSER_ES6_MODULE" */
 export default router;
 /* @endif */
-/* @if TARGET="BROWSER_ES5" || TARGET="BROWSER_ES6" */
+/* @if TARGET="BROWSER_ES6" || TARGET="BROWSER_ES5" */
 /* exported router */
 /* @endif */
