@@ -1,11 +1,5 @@
 "use strict";
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -18,65 +12,41 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var Router = function () {
-  function createArgument(router) {
+var router = function () {
+  var listener = function listener() {
     var _ref = window.location.hash ? decodeURI(window.location.hash).substring(1).split('?') : [''],
         _ref2 = _slicedToArray(_ref, 2),
         hash = _ref2[0],
         query = _ref2[1];
 
     var paths = hash.split('/');
-    return {
-      router: router,
+    router.route({
       hash: hash,
       paths: paths,
       query: query
-    };
-  }
+    });
+  };
 
-  return /*#__PURE__*/function () {
-    function _class(route) {
-      var _this = this;
-
-      _classCallCheck(this, _class);
-
-      this.route = route;
-
-      this.listener = function () {
-        return void _this.route(createArgument(_this));
-      };
+  return {
+    start: function start() {
+      window.addEventListener('popstate', listener);
+      listener();
+      return router;
+    },
+    push: function push(path) {
+      window.history.pushState({}, path, "#".concat(path));
+      listener();
+      return router;
+    },
+    replace: function replace(path) {
+      window.history.replaceState({}, path, "#".concat(path));
+      listener();
+      return router;
+    },
+    stop: function stop() {
+      window.removeEventListener('popstate', listener);
+      return router;
     }
-
-    _createClass(_class, [{
-      key: "start",
-      value: function start() {
-        window.addEventListener('popstate', this.listener);
-        this.route(createArgument(this));
-        return this;
-      }
-    }, {
-      key: "push",
-      value: function push(path) {
-        window.history.pushState({}, path, "#".concat(path));
-        this.route(createArgument(this));
-        return this;
-      }
-    }, {
-      key: "replace",
-      value: function replace(path) {
-        window.history.replaceState({}, path, "#".concat(path));
-        this.route(createArgument(this));
-        return this;
-      }
-    }, {
-      key: "stop",
-      value: function stop() {
-        window.removeEventListener('popstate', this.listender);
-        return this;
-      }
-    }]);
-
-    return _class;
-  }();
+  };
 }();
-/* exported Router */
+/* exported router */

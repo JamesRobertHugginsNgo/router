@@ -1,4 +1,4 @@
-import Router from '../../../dist/browser/es6-module/router.debug.js';
+import router from '../../../dist/browser/es6-module/router.debug.js';
 
 let header = document.createElement('h1');
 
@@ -40,7 +40,7 @@ let content = document.createElement('div');
 
 document.body.append(header, buttons, links, content);
 
-const router = new Router(function ({ router, hash, paths, query }) {
+router.route = ({ hash, paths, query }) => {
 	if (paths.length === 1 && paths[0] === 'page-1') {
 		const newHeader = document.createElement('h1');
 		newHeader.textContent = 'PAGE 1';
@@ -106,6 +106,6 @@ const router = new Router(function ({ router, hash, paths, query }) {
 	}
 
 	router.replace('page-1');
-});
+};
 
 router.start();
