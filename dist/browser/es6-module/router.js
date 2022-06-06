@@ -1,46 +1,39 @@
-function router(routes) {
-	return {
-		route() {
-			for (let index = 0, length = routes.length; index < length; index++) {
-				const { regex = /.*/, callback } = routes[index];
-				const [hash, query] = window.location.hash ? decodeURI(window.location.hash).substring(1).split('?') : [''];
-				const result = regex.exec(hash);
-				if (result) {
-					callback.call(this, ...result, query);
-					break;
-				}
-			}
+const Router = (() => {
+	function createArgument(router) {
+		const [hash, query] = window.location.hash ? decodeURI(window.location.hash).substring(1).split('?') : [''];
+		const paths = hash.split('/');
+		return { router, hash, paths, query };
+	}
 
-			return this;
-		},
+	return class {
+		constructor(route) {
+			this.route = route;
+			this.listener = () => void this.route(createArgument(this));
+		}
+
 		start() {
-			this.listender = () => void this.route();
-			window.addEventListener('popstate', this.listender);
-
-			return this.route();
-		},
-		end() {
-			window.removeEventListener('popstate', this.listender);
-			delete this.listender;
-
+			window.addEventListener('popstate', this.listener);
+			this.route(createArgument(this));
 			return this;
-		},
-		pushRoute(path) {
+		}
+
+		push(path) {
 			window.history.pushState({}, path, `#${path}`);
+			this.route(createArgument(this));
+			return this;
+		}
 
-			return this.route();
-		},
-		replaceRoute(path) {
+		replace(path) {
 			window.history.replaceState({}, path, `#${path}`);
+			this.route(createArgument(this));
+			return this;
+		}
 
-			return this.route();
-		},
-		routeBack() {
-			window.history.back();
-
+		stop() {
+			window.removeEventListener('popstate', this.listender);
 			return this;
 		}
 	};
-}
+})();
 
-export default router;
+export default Router;
