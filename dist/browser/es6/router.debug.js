@@ -1,64 +1,51 @@
-function router(routes) {
-	if (!(Array.isArray(routes) &&
-		routes.every((route) => route && typeof route === 'object' &&
-			(route.regex == null || route.regex instanceof RegExp) &&
-			typeof route.callback === 'function'))) {
-		throw 'Invalid Argument: routes. Must be an array of { regex, callback } object where regex is an instance of RegEx and callback if of function type.';
+const Router = (() => {
+	function createArgument(router) {
+		const [hash, query] = window.location.hash ? decodeURI(window.location.hash).substring(1).split('?') : [''];
+		const paths = hash.split('/');
+		return { router, hash, paths, query };
 	}
 
-	return {
-		route() {
-			for (let index = 0, length = routes.length; index < length; index++) {
-				const { regex = /.*/, callback } = routes[index];
-				const [hash, query] = window.location.hash ? decodeURI(window.location.hash).substring(1).split('?') : [''];
-				const result = regex.exec(hash);
-				if (result) {
-					callback.call(this, ...result, query);
-					break;
-				}
+	return class {
+		constructor(route) {
+			if (!(typeof route === 'function')) {
+				throw 'Argument "route" is invalid.';
 			}
 
-			return this;
-		},
+			this.route = route;
+			this.listener = () => void this.route(createArgument(this));
+		}
+
 		start() {
-			if (this.listender) {
-				throw 'Router Already Started.';
-			}
-
-			this.listender = () => void this.route();
-			window.addEventListener('popstate', this.listender);
-
-			return this.route();
-		},
-		end() {
-			if (!this.listender) {
-				throw 'Router Not Started.';
-			}
-
-			window.removeEventListener('popstate', this.listender);
-			delete this.listender;
-
+			window.addEventListener('popstate', this.listener);
+			this.route(createArgument(this));
 			return this;
-		},
-		pushRoute(path) {
+		}
+
+		push(path) {
 			if (!(typeof path === 'string')) {
-				throw 'Invalid Argument: path. Must be string type.';
+				throw 'Argument "path" is invalid.';
 			}
 
 			window.history.pushState({}, path, `#${path}`);
+			this.route(createArgument(this));
+			return this;
+		}
 
-			return this.route();
-		},
-		replaceRoute(path) {
+		replace(path) {
 			if (!(typeof path === 'string')) {
-				throw 'Invalid Argument: path. Must be string type.';
+				throw 'Argument "path" is invalid.';
 			}
 
 			window.history.replaceState({}, path, `#${path}`);
+			this.route(createArgument(this));
+			return this;
+		}
 
-			return this.route();
+		stop() {
+			window.removeEventListener('popstate', this.listender);
+			return this;
 		}
 	};
-}
+})();
 
-/* exported router */
+/* exported Router */

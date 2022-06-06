@@ -7,42 +7,36 @@ const gulpSourcemaps = require('gulp-sourcemaps');
 const gulpTerser = require('gulp-terser');
 const gulpUglify = require('gulp-uglify');
 
-// -- CLEAN UP -----------------------------------------------------------------
+// -- BUILD NODE WITH DEBUG ----------------------------------------------------
 
-function cleanup() {
-	return del('./dist/');
-}
-
-// -- NODE ---------------------------------------------------------------------
-
-// BUILD NODE DEBUG
-// function build_node_debug() {
-// 	return gulp.src('./src/**/*.js', { since: gulp.lastRun(build_node_debug) })
+// function buildNodeWithDebug() {
+// 	return gulp.src('./src/**/*.js', { since: gulp.lastRun(buildNodeWithDebug) })
 // 		.pipe(gulpPreprocess({ context: { TARGET: 'NODE', DEBUG: true } }))
 // 		.pipe(gulpRename((path) => path.basename += '.debug'))
 // 		.pipe(gulp.dest('./dist/node/'));
 // }
 
-// BUILD NODE
-// function build_node() {
-// 	return gulp.src('./src/**/*.js', { since: gulp.lastRun(build_node) })
+// -- BUILD NODE ---------------------------------------------------------------
+
+// function buildNode() {
+// 	return gulp.src('./src/**/*.js', { since: gulp.lastRun(buildNode) })
 // 		.pipe(gulpPreprocess({ context: { TARGET: 'NODE', DEBUG: false } }))
 // 		.pipe(gulp.dest('./dist/node/'));
 // }
 
-// -- BROWSER ES6 MODULE -------------------------------------------------------
+// -- BUILD BROWSER ES6 MODULE WITH DEBUG --------------------------------------
 
-// BUILD BROWSER ES6 MODULE DEBUG
-function build_browser_es6Module_debug() {
-	return gulp.src('./src/**/*.js', { since: gulp.lastRun(build_browser_es6Module_debug) })
+function buildBrowserEs6ModuleWithDebug() {
+	return gulp.src('./src/**/*.js', { since: gulp.lastRun(buildBrowserEs6ModuleWithDebug) })
 		.pipe(gulpPreprocess({ context: { TARGET: 'BROWSER_ES6_MODULE', DEBUG: true } }))
 		.pipe(gulpRename((path) => path.basename += '.debug'))
 		.pipe(gulp.dest('./dist/browser/es6-module/'));
 }
 
-// BUILD BROWSER ES6 MODULE
-function build_browser_es6Module() {
-	return gulp.src('./src/**/*.js', { since: gulp.lastRun(build_browser_es6Module) })
+// -- BUILD BROWSER ES6 MODULE -------------------------------------------------
+
+function buildBrowserEs6Module() {
+	return gulp.src('./src/**/*.js', { since: gulp.lastRun(buildBrowserEs6Module) })
 		.pipe(gulpPreprocess({ context: { TARGET: 'BROWSER_ES6_MODULE', DEBUG: false } }))
 		.pipe(gulp.dest('./dist/browser/es6-module/'))
 		.pipe(gulpRename((path) => path.basename += '.min'))
@@ -52,19 +46,19 @@ function build_browser_es6Module() {
 		.pipe(gulp.dest('./dist/browser/es6-module/'));
 }
 
-// -- BROWSER ES6 --------------------------------------------------------------
+// -- BUILD BROWSER ES6 WITH DEBUG ---------------------------------------------
 
-// BUILD BROWSER ES6 DEBUG
-function build_browser_es6_debug() {
-	return gulp.src('./src/**/*.js', { since: gulp.lastRun(build_browser_es6_debug) })
+function buildBrowserEs6WithDebug() {
+	return gulp.src('./src/**/*.js', { since: gulp.lastRun(buildBrowserEs6WithDebug) })
 		.pipe(gulpPreprocess({ context: { TARGET: 'BROWSER_ES6', DEBUG: true } }))
 		.pipe(gulpRename((path) => path.basename += '.debug'))
 		.pipe(gulp.dest('./dist/browser/es6/'));
 }
 
-// BUILD BROWSER ES6
-function build_browser_es6() {
-	return gulp.src('./src/**/*.js', { since: gulp.lastRun(build_browser_es6) })
+// -- BUILD BROWSER ES6 --------------------------------------------------------
+
+function buildBrowserEs6() {
+	return gulp.src('./src/**/*.js', { since: gulp.lastRun(buildBrowserEs6) })
 		.pipe(gulpPreprocess({ context: { TARGET: 'BROWSER_ES6', DEBUG: false } }))
 		.pipe(gulp.dest('./dist/browser/es6/'))
 		.pipe(gulpRename((path) => path.basename += '.min'))
@@ -74,20 +68,20 @@ function build_browser_es6() {
 		.pipe(gulp.dest('./dist/browser/es6/'));
 }
 
-// -- BROWSER ES5 --------------------------------------------------------------
+// -- BUILD BROWSER ES5 WITH DEBUG ---------------------------------------------
 
-// BUILD BROWSER ES5 DEBUG
-function build_browser_es5_debug() {
-	return gulp.src('./src/**/*.js', { since: gulp.lastRun(build_browser_es5_debug) })
+function buildBrowserEs5WithDebug() {
+	return gulp.src('./src/**/*.js', { since: gulp.lastRun(buildBrowserEs5WithDebug) })
 		.pipe(gulpPreprocess({ context: { TARGET: 'BROWSER_ES5', DEBUG: true } }))
 		.pipe(gulpBabel())
 		.pipe(gulpRename((path) => path.basename += '.debug'))
 		.pipe(gulp.dest('./dist/browser/es5/'));
 }
 
-// BUILD BROWSER ES5
-function build_browser_es5() {
-	return gulp.src('./src/**/*.js', { since: gulp.lastRun(build_browser_es5) })
+// -- BUILD BROWSER ES5 --------------------------------------------------------
+
+function buildBrowserEs5() {
+	return gulp.src('./src/**/*.js', { since: gulp.lastRun(buildBrowserEs5) })
 		.pipe(gulpPreprocess({ context: { TARGET: 'BROWSER_ES5', DEBUG: false } }))
 		.pipe(gulpBabel())
 		.pipe(gulp.dest('./dist/browser/es5/'))
@@ -98,17 +92,21 @@ function build_browser_es5() {
 		.pipe(gulp.dest('./dist/browser/es5/'));
 }
 
-// -----------------------------------------------------------------------------
+// - EXPORTS -------------------------------------------------------------------
+
+function cleanup() {
+	return del('./dist/');
+}
 
 const build = gulp.parallel(
-	// build_node_debug,
-	// build_node,
-	build_browser_es6Module_debug,
-	build_browser_es6Module,
-	build_browser_es6_debug,
-	build_browser_es6,
-	build_browser_es5_debug,
-	build_browser_es5
+	// buildNodeWithDebug,
+	// buildNode,
+	buildBrowserEs6ModuleWithDebug,
+	buildBrowserEs6Module,
+	buildBrowserEs6WithDebug,
+	buildBrowserEs6,
+	buildBrowserEs5WithDebug,
+	buildBrowserEs5
 );
 
 function watch() {
