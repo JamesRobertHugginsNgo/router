@@ -3,13 +3,13 @@
 ## Installation
 
 ``` console
-npm install https://github.com/JamesRobertHugginsNgo/router.git#4.0.0
+npm install https://github.com/JamesRobertHugginsNgo/router.git#5.0.0
 ```
 
 ## Usage
 
 ``` JavaScript
-router.route = ({ hash, paths, query }) => {
+const route = ({ hash, paths, query, router }) => {
   if (paths.length === 1 && paths[0] === 'page-1') {
     /* ... */
     return;
@@ -34,5 +34,6 @@ router.route = ({ hash, paths, query }) => {
   router.replace('page-1');
 };
 
+const router = new Route(route);
 router.start();
 ```
