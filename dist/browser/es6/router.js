@@ -1,34 +1,36 @@
-const router = (() => {
-	const listener = () => {
-		const [hash, query] = window.location.hash ? decodeURI(window.location.hash).substring(1).split('?') : [''];
-		const paths = hash.split('/');
-		router.route({ hash, paths, query });
-	};
+class Router {
+	constructor(route) {
+		this._listener = () => {
+			const [hash, query] = window.location.hash.charAt(0) === '#'
+				? decodeURI(window.location.hash.substring(1)).split('?')
+				: [''];
+			const paths = hash.split('/');
+			route({ hash, paths, query, router: this });
+		};
 
-	return {
-		start() {
-			window.addEventListener('popstate', listener);
-			listener();
-			return router;
-		},
+		this.started = false;
+	}
 
-		push(path) {
-			window.history.pushState({}, path, `#${path}`);
-			listener();
-			return router;
-		},
+	start() {
+		this.started = true;
+		window.addEventListener('popstate', this._listener);
+		this._listener();
+	}
 
-		replace(path) {
-			window.history.replaceState({}, path, `#${path}`);
-			listener();
-			return router;
-		},
+	push(path) {
+		window.history.pushState({}, path, `#${path}`);
+		this._listener();
+	}
 
-		stop() {
-			window.removeEventListener('popstate', listener);
-			return router;
-		}
-	};
-})();
+	replace(path) {
+		window.history.replaceState({}, path, `#${path}`);
+		this._listener();
+	}
 
-/* exported router */
+	stop() {
+		window.removeEventListener('popstate', this._listener);
+		this.started = false;
+	}
+}
+
+/* exported Router */

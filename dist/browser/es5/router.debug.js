@@ -12,53 +12,114 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var router = function () {
-  var listener = function listener() {
-    if (!(typeof router.route === 'function')) {
-      throw 'Method "route" is invalid.';
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+var Router = /*#__PURE__*/function () {
+  function Router(route) {
+    var _this = this;
+
+    _classCallCheck(this, Router);
+
+    if (!(typeof route === 'function')) {
+      throw 'Argument "route" is invalid.';
     }
 
-    var _ref = window.location.hash ? decodeURI(window.location.hash).substring(1).split('?') : [''],
-        _ref2 = _slicedToArray(_ref, 2),
-        hash = _ref2[0],
-        query = _ref2[1];
+    this._listener = function () {
+      if (!(_this.started === true)) {
+        throw 'Router has not yest started or has been stopped.';
+      }
 
-    var paths = hash.split('/');
-    router.route({
-      hash: hash,
-      paths: paths,
-      query: query
-    });
-  };
+      var _ref = window.location.hash.charAt(0) === '#' ? decodeURI(window.location.hash.substring(1)).split('?') : [''],
+          _ref2 = _slicedToArray(_ref, 2),
+          hash = _ref2[0],
+          query = _ref2[1];
 
-  return {
-    start: function start() {
-      window.addEventListener('popstate', listener);
-      listener();
-      return router;
-    },
-    push: function push(path) {
+      var paths = hash.split('/');
+      route({
+        hash: hash,
+        paths: paths,
+        query: query,
+        router: _this
+      });
+    };
+
+    this.started = false;
+  }
+
+  _createClass(Router, [{
+    key: "start",
+    value: function start() {
+      if (!(typeof this._listener === 'function')) {
+        throw 'Property "_listener" is invalid.';
+      }
+
+      if (!(this.started === false)) {
+        throw 'Router has already started.';
+      }
+
+      this.started = true;
+      window.addEventListener('popstate', this._listener);
+
+      this._listener();
+    }
+  }, {
+    key: "push",
+    value: function push(path) {
       if (!(typeof path === 'string')) {
         throw 'Argument "path" is invalid.';
+      }
+
+      if (!(typeof this._listener === 'function')) {
+        throw 'Property "_listener" is invalid.';
+      }
+
+      if (!(this.started === true)) {
+        throw 'Router has not yest started or has been stopped.';
       }
 
       window.history.pushState({}, path, "#".concat(path));
-      listener();
-      return router;
-    },
-    replace: function replace(path) {
+
+      this._listener();
+    }
+  }, {
+    key: "replace",
+    value: function replace(path) {
       if (!(typeof path === 'string')) {
         throw 'Argument "path" is invalid.';
       }
 
+      if (!(typeof this._listener === 'function')) {
+        throw 'Property "_listener" is invalid.';
+      }
+
+      if (!(this.started === true)) {
+        throw 'Router has not yest started or has been stopped.';
+      }
+
       window.history.replaceState({}, path, "#".concat(path));
-      listener();
-      return router;
-    },
-    stop: function stop() {
-      window.removeEventListener('popstate', listener);
-      return router;
+
+      this._listener();
     }
-  };
+  }, {
+    key: "stop",
+    value: function stop() {
+      if (!(typeof this._listener === 'function')) {
+        throw 'Property "_listener" is invalid.';
+      }
+
+      if (!(this.started === true)) {
+        throw 'Router has not yest started or has been stopped.';
+      }
+
+      window.removeEventListener('popstate', this._listener);
+      this.started = false;
+    }
+  }]);
+
+  return Router;
 }();
-/* exported router */
+/* exported Router */

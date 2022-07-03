@@ -12,41 +12,66 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var router = function () {
-  var listener = function listener() {
-    var _ref = window.location.hash ? decodeURI(window.location.hash).substring(1).split('?') : [''],
-        _ref2 = _slicedToArray(_ref, 2),
-        hash = _ref2[0],
-        query = _ref2[1];
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    var paths = hash.split('/');
-    router.route({
-      hash: hash,
-      paths: paths,
-      query: query
-    });
-  };
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-  return {
-    start: function start() {
-      window.addEventListener('popstate', listener);
-      listener();
-      return router;
-    },
-    push: function push(path) {
-      window.history.pushState({}, path, "#".concat(path));
-      listener();
-      return router;
-    },
-    replace: function replace(path) {
-      window.history.replaceState({}, path, "#".concat(path));
-      listener();
-      return router;
-    },
-    stop: function stop() {
-      window.removeEventListener('popstate', listener);
-      return router;
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+var Router = /*#__PURE__*/function () {
+  function Router(route) {
+    var _this = this;
+
+    _classCallCheck(this, Router);
+
+    this._listener = function () {
+      var _ref = window.location.hash.charAt(0) === '#' ? decodeURI(window.location.hash.substring(1)).split('?') : [''],
+          _ref2 = _slicedToArray(_ref, 2),
+          hash = _ref2[0],
+          query = _ref2[1];
+
+      var paths = hash.split('/');
+      route({
+        hash: hash,
+        paths: paths,
+        query: query,
+        router: _this
+      });
+    };
+
+    this.started = false;
+  }
+
+  _createClass(Router, [{
+    key: "start",
+    value: function start() {
+      this.started = true;
+      window.addEventListener('popstate', this._listener);
+
+      this._listener();
     }
-  };
+  }, {
+    key: "push",
+    value: function push(path) {
+      window.history.pushState({}, path, "#".concat(path));
+
+      this._listener();
+    }
+  }, {
+    key: "replace",
+    value: function replace(path) {
+      window.history.replaceState({}, path, "#".concat(path));
+
+      this._listener();
+    }
+  }, {
+    key: "stop",
+    value: function stop() {
+      window.removeEventListener('popstate', this._listener);
+      this.started = false;
+    }
+  }]);
+
+  return Router;
 }();
-/* exported router */
+/* exported Router */
